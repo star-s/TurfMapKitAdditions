@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Turf",
+        "repositoryURL": "https://github.com/mapbox/turf-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "40079b9133402b1fd57a9845f8785cca19beb472",
+          "version": "0.3.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
