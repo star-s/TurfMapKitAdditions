@@ -10,7 +10,7 @@ import Foundation
 import MapKit
 import Turf
 
-public final class FeatureVariantAdapter: NSObject, RegionOnTheMap {
+open class FeatureVariantAdapter: NSObject, RegionOnTheMap {
     public let variant: FeatureVariant
     
     public let coordinate: CLLocationCoordinate2D
