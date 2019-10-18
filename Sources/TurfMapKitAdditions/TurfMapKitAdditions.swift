@@ -14,15 +14,33 @@ public extension Ring {
 }
 
 public extension GeoJSONObject {
-    func property<T: LosslessStringConvertible>(_ propertyName: String, _ defaultValue: T) -> T {
-        guard let properties = properties else { return defaultValue }
-        if let value = properties[propertyName]?.jsonValue as? T {
+    func property<T: LosslessStringConvertible>(_ propertyName: String) -> T? {
+        guard let properties = properties else { return nil }
+        if let value:T = properties[propertyName]?.unpackValue() {
             return value
         }
-        if let strVal = properties[propertyName]?.jsonValue as? String, let result = T.init(strVal) {
-            return result
+        return nil
+    }
+    
+    mutating func setProperty(_ propertyName: String, _ value: JSONType) {
+        if var prop = properties {
+            prop[propertyName] = AnyJSONType(value.jsonValue)
+            properties = prop
+        } else {
+            properties = [propertyName : AnyJSONType(value.jsonValue)]
         }
-        return defaultValue
+    }
+}
+
+public extension AnyJSONType {
+    func unpackValue<T>() -> T? where T: LosslessStringConvertible {
+        if let value = jsonValue as? T {
+            return value
+        }
+        if let stringValue = jsonValue as? String {
+            return T.init(stringValue)
+        }
+        return nil
     }
 }
 
