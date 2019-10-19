@@ -10,37 +10,22 @@ import Foundation
 import MapKit
 import Turf
 
-open class FeatureVariantAdapter: NSObject, RegionOnTheMap {
+open class FeatureVariantAdapter: NSObject, MKOverlay {
     public let variant: FeatureVariant
     
     public let coordinate: CLLocationCoordinate2D
     public let boundingMapRect: MKMapRect
 
-    public var title: String? = nil
-    public var subtitle: String? = nil
-
     public init(_ variant: FeatureVariant) {
         self.variant = variant
-        switch variant {
-        case .pointFeature(let point):
-            boundingMapRect = MKMapRect(origin: MKMapPoint(point.geometry.coordinates), size: MKMapSize())
-            coordinate = point.geometry.coordinates
-        case .polygonFeature(let feature):
-            boundingMapRect = feature.geometry.outerRing.boundingMapRect
-            coordinate = MKCoordinateRegion(boundingMapRect).center
-        case .multiPolygonFeature(let feature):
-            boundingMapRect = feature.geometry.polygons.map({ $0.outerRing.boundingMapRect }).reduce(.null, { $0.union($1) })
-            coordinate = MKCoordinateRegion(boundingMapRect).center
-        default:
-            coordinate = kCLLocationCoordinate2DInvalid
-            boundingMapRect = MKMapRect.null
-        }
+        coordinate = variant.makeCoordinate()
+        boundingMapRect = variant.makeBoundingMapRect()
     }
     /*
     convenience init(feature: PolygonFeature) {
         self.init(.polygonFeature(feature))
     }*/
-    
+    /*
     public func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
         switch variant {
         case .pointFeature(let point):
@@ -52,5 +37,5 @@ open class FeatureVariantAdapter: NSObject, RegionOnTheMap {
         default:
             return false
         }
-    }
+    }*/
 }

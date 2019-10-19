@@ -1,16 +1,12 @@
 import MapKit
 import Turf
 
-public protocol RegionOnTheMap: MKOverlay {
-    func contains(_ coordinate: CLLocationCoordinate2D) -> Bool
-}
-
 public extension MultiPolygon {
     var polygons:[Polygon] { coordinates.map({ Polygon($0) }) }
 }
 
 public extension Ring {
-    var boundingMapRect: MKMapRect { mapPoints.reduce(.null, { $0.union(MKMapRect(origin: $1, size: MKMapSize())) }) }
+    func makeBoundingMapRect() -> MKMapRect { mapPoints.reduce(.null, { $0.union(MKMapRect(origin: $1, size: MKMapSize())) }) }
 }
 
 public extension GeoJSONObject {
@@ -44,8 +40,28 @@ public extension AnyJSONType {
     }
 }
 
-public extension MultiPolygonFeature {
-    static func +(lhs: MultiPolygonFeature, rhs: MultiPolygonFeature) -> MultiPolygonFeature {
-        return MultiPolygonFeature(MultiPolygon(lhs.geometry.coordinates + rhs.geometry.coordinates))
+public extension FeatureVariant {
+    func makeCoordinate() -> CLLocationCoordinate2D {
+        switch self {
+        case .pointFeature(let point):
+            return point.geometry.coordinates
+        case .polygonFeature(_), .multiPolygonFeature(_):
+            return MKCoordinateRegion(makeBoundingMapRect()).center
+        default:
+            return kCLLocationCoordinate2DInvalid
+        }
+    }
+    
+    func makeBoundingMapRect() -> MKMapRect {
+        switch self {
+        case .pointFeature(let point):
+            return MKMapRect(origin: MKMapPoint(point.geometry.coordinates), size: MKMapSize())
+        case .polygonFeature(let feature):
+            return feature.geometry.outerRing.makeBoundingMapRect()
+        case .multiPolygonFeature(let feature):
+            return feature.geometry.polygons.map({ $0.outerRing.makeBoundingMapRect() }).reduce(.null, { $0.union($1) })
+        default:
+            return .null
+        }
     }
 }
