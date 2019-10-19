@@ -1,5 +1,8 @@
 import MapKit
 import Turf
+#if os(macOS)
+import struct Turf.Polygon
+#endif
 
 public extension MultiPolygon {
     var polygons:[Polygon] { coordinates.map({ Polygon($0) }) }
