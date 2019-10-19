@@ -5,6 +5,7 @@
 //  Created by Sergey Starukhin on 19/10/2019.
 //
 
+#if canImport(UIKit)
 import UIKit
 import MapKit
 import Turf
@@ -53,3 +54,4 @@ public extension MKOverlayRenderer {
         return path
     }
 }
+#endif

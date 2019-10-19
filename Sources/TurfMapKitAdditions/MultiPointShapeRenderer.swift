@@ -6,6 +6,7 @@
 //  Copyright © 2019 Sergey Starukhin. All rights reserved.
 //
 
+#if canImport(UIKit)
 import UIKit
 import MapKit
 import Turf
@@ -25,3 +26,4 @@ open class MultiPointShapeRenderer: MKOverlayPathRenderer {
         }
     }
 }
+#endif
