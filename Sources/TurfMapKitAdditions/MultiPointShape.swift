@@ -14,6 +14,8 @@ public protocol MultiPointShape {
     var mapPoints: [MKMapPoint] { get }
     var isClosedShape: Bool { get }
     
+    var interiorShapes: [MultiPointShape]? { get }
+    
     var beginMapPoint: MKMapPoint? { get }
     var restMapPoints: [MKMapPoint] { get }
 }
@@ -21,6 +23,7 @@ public protocol MultiPointShape {
 public extension MultiPointShape {
     var beginMapPoint: MKMapPoint? { mapPoints.first }
     var restMapPoints: [MKMapPoint] { Array(mapPoints.suffix(from: 1)) }
+    var interiorShapes: [MultiPointShape]? { nil }
 }
 
 extension MKMultiPoint: MultiPointShape {
@@ -30,6 +33,12 @@ extension MKMultiPoint: MultiPointShape {
             return true
         }
         return false
+    }
+    public var interiorShapes: [MultiPointShape]? {
+        if let polygon = self as? MKPolygon {
+            return polygon.interiorPolygons
+        }
+        return nil
     }
 }
 
@@ -41,4 +50,10 @@ extension Ring: MultiPointShape {
 extension LineString: MultiPointShape {
     public var mapPoints: [MKMapPoint] { coordinates.map({ MKMapPoint($0) }) }
     public var isClosedShape: Bool { false }
+}
+
+extension Polygon: MultiPointShape {
+    public var mapPoints: [MKMapPoint] { outerRing.mapPoints }
+    public var isClosedShape: Bool { true }
+    public var interiorShapes: [MultiPointShape]? { innerRings }
 }

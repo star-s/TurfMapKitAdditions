@@ -28,9 +28,12 @@ public extension MKOverlayRenderer {
         if shape.isClosedShape {
             path.close()
         }
+        if let interiorShapes = shape.interiorShapes {
+            interiorShapes.forEach({ path.append(makeBezierPath(shape: $0)) })
+        }
         return path
     }
-    
+    /*
     func makeBezierPath(polygon: MKPolygon) -> BezierPath {
         let path = makeBezierPath(shape: polygon)
         for interior in polygon.interiorPolygons ?? [] {
@@ -58,5 +61,5 @@ public extension MKOverlayRenderer {
             path.append(makeBezierPath(shape: ring))
         }
         return path
-    }
+    }*/
 }

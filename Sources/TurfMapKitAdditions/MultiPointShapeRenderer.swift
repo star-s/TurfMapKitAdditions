@@ -13,10 +13,6 @@ open class MultiPointShapeRenderer: MKOverlayPathRenderer {
     
     override open func createPath() {
         switch overlay {
-        case let polygon as MKPolygon:
-            path = makeBezierPath(polygon: polygon).cgPath
-        case let object as FeatureVariantAdapter:
-            path = makeBezierPath(variant: object.variant).cgPath
         case let shape as MultiPointShape:
             path = makeBezierPath(shape: shape).cgPath
         default:

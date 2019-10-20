@@ -12,6 +12,16 @@ public extension Ring {
     func makeBoundingMapRect() -> MKMapRect { mapPoints.reduce(.null, { $0.union(MKMapRect(origin: $1, size: MKMapSize())) }) }
 }
 
+public extension Polygon {
+    func makeBoundingMapRect() -> MKMapRect {
+        var result = outerRing.makeBoundingMapRect()
+        for ring in innerRings ?? [] {
+            result = result.union(ring.makeBoundingMapRect())
+        }
+        return result
+    }
+}
+
 public extension GeoJSONObject {
     func property<T: LosslessStringConvertible>(_ propertyName: String) -> T? {
         guard let properties = properties else { return nil }
@@ -60,9 +70,9 @@ public extension FeatureVariant {
         case .pointFeature(let point):
             return MKMapRect(origin: MKMapPoint(point.geometry.coordinates), size: MKMapSize())
         case .polygonFeature(let feature):
-            return feature.geometry.outerRing.makeBoundingMapRect()
+            return feature.geometry.makeBoundingMapRect()
         case .multiPolygonFeature(let feature):
-            return feature.geometry.polygons.map({ $0.outerRing.makeBoundingMapRect() }).reduce(.null, { $0.union($1) })
+            return feature.geometry.polygons.map({ $0.makeBoundingMapRect() }).reduce(.null, { $0.union($1) })
         default:
             return .null
         }
