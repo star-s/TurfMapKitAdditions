@@ -9,7 +9,7 @@
 import MapKit
 import Turf
 
-protocol MultiPointShapeOverlay: MKOverlay {
+public protocol MultiPointShapeOverlay: MKOverlay {
     var geometry: MultiPointShape { get }
 }
 
