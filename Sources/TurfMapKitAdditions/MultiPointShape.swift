@@ -28,12 +28,7 @@ public extension MultiPointShape {
 
 extension MKMultiPoint: MultiPointShape {
     public var mapPoints: [MKMapPoint] { Array(UnsafeBufferPointer(start: points(), count: pointCount)) }
-    public var isClosedShape: Bool {
-        if let _ = self as? MKPolygon {
-            return true
-        }
-        return false
-    }
+    public var isClosedShape: Bool { self is MKPolygon }
     public var interiorShapes: [MultiPointShape]? {
         if let polygon = self as? MKPolygon {
             return polygon.interiorPolygons

@@ -33,33 +33,4 @@ public extension MKOverlayRenderer {
         }
         return path
     }
-    /*
-    func makeBezierPath(polygon: MKPolygon) -> BezierPath {
-        let path = makeBezierPath(shape: polygon)
-        for interior in polygon.interiorPolygons ?? [] {
-            path.append(makeBezierPath(polygon: interior))
-        }
-        return path
-    }
-    
-    func makeBezierPath(variant: FeatureVariant) -> BezierPath {
-        switch variant {
-        case .lineStringFeature(let line):
-            return makeBezierPath(shape: line.geometry)
-        case .polygonFeature(let feature):
-            return makeBezierPath(featureGeometry: feature.geometry)
-        case .multiPolygonFeature(let feature):
-            return feature.geometry.polygons.map({ makeBezierPath(featureGeometry: $0) }).reduce(BezierPath(), { $0.append($1); return $0 })
-        default:
-            fatalError("wrong variant")
-        }
-    }
-    
-    func makeBezierPath(featureGeometry: Polygon) -> BezierPath {
-        let path = makeBezierPath(shape: featureGeometry.outerRing)
-        for ring in featureGeometry.innerRings ?? [] {
-            path.append(makeBezierPath(shape: ring))
-        }
-        return path
-    }*/
 }

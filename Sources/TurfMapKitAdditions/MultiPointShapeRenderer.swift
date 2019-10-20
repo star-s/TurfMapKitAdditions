@@ -9,10 +9,16 @@
 import MapKit
 import Turf
 
+protocol MultiPointShapeOverlay: MKOverlay {
+    var geometry: MultiPointShape { get }
+}
+
 open class MultiPointShapeRenderer: MKOverlayPathRenderer {
     
     override open func createPath() {
         switch overlay {
+        case let overlay as MultiPointShapeOverlay:
+            path = makeBezierPath(shape: overlay.geometry).cgPath
         case let shape as MultiPointShape:
             path = makeBezierPath(shape: shape).cgPath
         default:
