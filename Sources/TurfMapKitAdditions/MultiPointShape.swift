@@ -18,12 +18,22 @@ public protocol MultiPointShape {
     
     var beginMapPoint: MKMapPoint? { get }
     var restMapPoints: [MKMapPoint] { get }
+    
+    var bounds: MKMapRect { get }
 }
 
 public extension MultiPointShape {
     var beginMapPoint: MKMapPoint? { mapPoints.first }
     var restMapPoints: [MKMapPoint] { Array(mapPoints.suffix(from: 1)) }
     var interiorShapes: [MultiPointShape]? { nil }
+    
+    var bounds: MKMapRect {
+        let result = mapPoints.reduce(MKMapRect.null, { $0.union(MKMapRect(origin: $1, size: MKMapSize())) })
+        if let interior = interiorShapes {
+            return interior.map({ $0.bounds }).reduce(result, { $0.union($1) })
+        }
+        return result
+    }
 }
 
 extension MKMultiPoint: MultiPointShape {
