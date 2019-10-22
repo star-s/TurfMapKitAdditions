@@ -9,6 +9,9 @@
 import Foundation
 import MapKit
 import Turf
+#if os(macOS)
+import struct Turf.Polygon
+#endif
 
 public protocol MultiPointShape {
     var mapPoints: [MKMapPoint] { get }
