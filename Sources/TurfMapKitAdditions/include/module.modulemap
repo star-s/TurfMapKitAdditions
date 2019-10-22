@@ -1,5 +1,0 @@
-framework module TurfMapKitAdditions {
-  umbrella header "TurfMapKitAdditions.h"
-  export *
-  module * { export * }
-}
