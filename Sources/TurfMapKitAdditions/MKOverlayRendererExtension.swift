@@ -16,6 +16,7 @@ import struct Turf.Polygon
 public typealias BezierPath = NSBezierPath
 #endif
 
+@nonobjc
 public extension MKOverlayRenderer {
     
     func makeBezierPath(shape: MultiPointShape) -> BezierPath {

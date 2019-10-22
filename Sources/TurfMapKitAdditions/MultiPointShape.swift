@@ -39,6 +39,7 @@ public extension MultiPointShape {
     }
 }
 
+@nonobjc
 extension MKMultiPoint: MultiPointShape {
     public var mapPoints: [MKMapPoint] { Array(UnsafeBufferPointer(start: points(), count: pointCount)) }
     public var isClosedShape: Bool { self is MKPolygon }
